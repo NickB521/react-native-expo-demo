@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native-web";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import React, { useState } from "react";
 import { firebase } from "../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";

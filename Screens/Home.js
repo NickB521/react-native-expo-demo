@@ -1,92 +1,43 @@
 import { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Keyboard, Pressable} from "react-native-web";
-import { firebase } from "../firebaseConfig";
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Keyboard, Pressable} from "react-native";
+import { db } from "../firebaseConfig";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { query, QuerySnapshot } from "firebase/firestore";
 
 
 
 const Home = () => {
     const [todos, setTodos] = useState([]);
-    const todoRef = firebase.firestore().collection('todos');
-    const [addData, setaddData] = useState('');
     const navigation = useNavigation();
+    const [addData, setAddData] = useState('');
 
-    // fetch or read the data from firestore
-    useEffect(() =>{
-        todoRef
-        .orderBy('createAt', 'desc')
-        .onSnapshot(
-            QuerySnapshot => {
-                const todos = []
-                QuerySnapshot.forEach((doc) => {
-                    const {heading} = doc.data()
-                    todos.push({
-                        id: doc.id,
-                        heading,
-                    })
-                })
-                setTodos(todos)
-            }
-        )
-    }, [])
+    const addTodo = () =>{
 
-    // delete a todo from firestore db
-    const deleteTodo = (todos) => {
-        todoRef
-            .doc(todos.id)
-            .delete()
-            .then(() => {
-                // show a successful alert
-                alert('Deleted Successfully')                
-            })
-            .catch(error => {
-                alert(error);
-            })
     }
-    // add a todo
-    const addTodo = () => {
-        // check if we have a todo
-        if (addData && addData.length > 0){
-            // get the timestamp
-            const timestamp = firestore = firebase.firestore.FieldValue.serverTimestamp();
-            const data = {
-                heading: addData,
-                createdAt: timestamp
-            };
-            todoRef
-                .add(data)
-                .then(() => {
-                    setaddData('');
-                    // release Keyboard
-                    Keyboard.dismiss();
-                })
-                .catch((error) => {
-                    alert(error);
-                })
-        }
+
+    const deleteTodo = (todos) =>{
+
     }
 
     return (
-            <View>
+            <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
-                <View style={StyleSheet.input}
-                    placeholder='Add A New Todo'
-                    placeholderTextColor='#aaaaaa'
-                    onChangeText={(heading) => setAddData(heading)}
-                    value={addData}
-                    underlineColorAndroid='transparent'
-                    autoCapitalize='none' />
-                <TouchableOpacity style={styles.button} onPress={addTodo}>
-                    <Text style={styles.buttonText}> Add </Text>
-                </TouchableOpacity>
-            </View>
+                    <View style={styles.input}
+                        placeholder='Add A New Todo'
+                        placeholderTextColor='#aaaaaa'
+                        onChangeText={(heading) => setAddData(heading)}
+                        value={addData}
+                        underlineColorAndroid='transparent'
+                        autoCapitalize='none' />
+                    <TouchableOpacity style={styles.button} onPress={addTodo}>
+                        <Text style={styles.buttonText}> Add </Text>
+                    </TouchableOpacity>
+                </View>
             <FlatList
                 data={todos}
                 numColumns={1}
                 renderItem={({ item }) => (
-                    <view>
+                    <View>
                         <Pressable
                             style={styles.container}
                             onPress={() => navigation.navigate('Detail', {item})}
@@ -106,9 +57,9 @@ const Home = () => {
                         </Pressable>
 
 
-                    </view>
+                    </View>
                 )} 
-            />
+                />
         </View>
     )
 
