@@ -3,6 +3,8 @@ import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Keyboard
 import { db } from "../firebaseConfig";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { collection, getDocs, addDoc,
+    updateDoc, deleteDoc, doc } from "firebase/firestore";
 
 
 
@@ -10,9 +12,11 @@ const Home = () => {
     const [todos, setTodos] = useState([]);
     const navigation = useNavigation();
     const [addData, setAddData] = useState('');
+    const todosCollectionRef = collection(db, "Todos")
 
-    const addTodo = () =>{
-
+    const addTodo =  async () =>{
+        await addDoc(todosCollectionRef, { name: addData});
+        setAddData('');
     }
 
     const deleteTodo = (todos) =>{
